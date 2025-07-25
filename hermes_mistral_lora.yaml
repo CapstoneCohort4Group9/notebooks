@@ -1,0 +1,71 @@
+adapter: lora
+base_model: NousResearch/Hermes-2-Pro-Mistral-7B
+bf16: auto
+datasets:
+- chat_template: chatml
+  field_messages: conversations
+  message_field_training: train
+  message_property_mappings:
+    content: value
+    role: from
+  path: dataset/train.jsonl
+  roles_to_train:
+  - assistant
+  train_on_eos: turn
+  train_on_eot: turn
+  type: chat_template
+eval_sample_packing: false
+evals:
+- chat_template: chatml
+  field_messages: conversations
+  message_property_mappings:
+    content: value
+    role: from
+  path: dataset/test.jsonl
+  type: chat_template
+evals_per_epoch: 1
+flash_attention: true
+gradient_accumulation_steps: 4
+gradient_checkpointing: true
+learning_rate: 0.0002
+load_in_4bit: false
+load_in_8bit: true
+logging_steps: 1
+lora_alpha: 16
+lora_dropout: 0.05
+lora_model_dir: null
+lora_modules_to_save:
+- embed_tokens
+- lm_head
+lora_r: 32
+lora_target_linear: true
+lr_scheduler: cosine
+micro_batch_size: 2
+num_epochs: 3
+optimizer: adamw_bnb_8bit
+output_dir: hermes
+pad_to_sequence_len: true
+remove_unused_columns: false
+resume_from_checkpoint: null
+sample_packing: true
+saves_per_epoch: 1
+sequence_len: 4096
+special_tokens:
+  bos_token: <|im_start|>
+  eos_token: <|im_end|>
+tf32: false
+tokenizer_type: AutoTokenizer
+tokens:
+- <|user|>
+- <|assistant|>
+- <|im_start|>
+- <|im_end|>
+- <tool_call>
+- </tool_call>
+wandb_entity: harshit-sk-org
+wandb_log_model: checkpoint
+wandb_name: hermes-mistral-travel-customer-support-v1
+wandb_project: travel-chat-assistant
+wandb_watch: all
+warmup_steps: 10
+weight_decay: 0.0
